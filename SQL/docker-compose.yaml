@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  # MySQL
+  db:
+    platform: linux/x86_64
+    image: mysql:5.7
+    container_name: mysql_test
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sample
+      MYSQL_USER: rebelapp
+      MYSQL_PASSWORD: rebelapp
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+    - ./mysql/data:/var/lib/mysql
+    - ./mysql/conf:/etc/mysql/conf.d
+    - ./mysql/init:/docker-entrypoint-initdb.d
+    ports:
+    - 3306:3306
+
+  # phpMyAdmin
+  phpmyadmin:
+    container_name: phpmyadmin_test
+    image: phpmyadmin/phpmyadmin
+    environment:
+    - PMA_ARBITRARY=1
+    - PMA_HOSTS=mysql_test
+    - PMA_USER=root
+    - PMA_PASSWORD=root
+    ports:
+    - 8081:80
